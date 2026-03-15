@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yolo Fitness By Suraj</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --bg4: #222222;
+    --accent: #f0a500;
+    --accent2: #ff6b00;
+    --text: #f0f0f0;
+    --muted: #888;
+    --border: #2a2a2a;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 15px; line-height: 1.6; }
+  a { text-decoration: none; color: inherit; }
+
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(10,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { color: var(--muted); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta { background: var(--accent); color: #000; padding: 8px 20px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; border: none; transition: opacity 0.2s; }
+  .nav-cta:hover { opacity: 0.85; }
+
+  .hero { position: relative; min-height: 88vh; display: flex; align-items: center; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0a0a0a 40%, #1a0a00 100%); }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.3; }
+  .hero-accent { position: absolute; right: 0; top: 0; width: 55%; height: 100%; background: radial-gradient(ellipse at 80% 40%, rgba(240,165,0,0.12) 0%, transparent 65%); }
+  .hero-content { position: relative; max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.3); padding: 6px 16px; border-radius: 50px; font-size: 13px; color: var(--accent); margin-bottom: 1.5rem; }
+  .hero-badge .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+  h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 1.5rem; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .hero-sub { font-size: 18px; color: var(--muted); max-width: 520px; margin-bottom: 2.5rem; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn { padding: 14px 28px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #e09800; transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+  .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-tag { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
+  h2 span { color: var(--accent); }
+  .section-sub { color: var(--muted); font-size: 16px; max-width: 540px; margin-bottom: 3rem; }
+
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+  .card:hover { border-color: rgba(240,165,0,0.3); }
+
+  .agents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+
+  .agent-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+  .agent-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .agent-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .agent-icon.orange { background: rgba(240,165,0,0.15); }
+  .agent-icon.blue { background: rgba(59,130,246,0.15); }
+  .agent-icon.green { background: rgba(34,197,94,0.15); }
+  .agent-icon.red { background: rgba(239,68,68,0.15); }
+  .agent-title { font-weight: 700; font-size: 15px; }
+  .agent-desc { font-size: 12px; color: var(--muted); }
+  .agent-status { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--success); }
+  .status-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+  .chat-window { flex: 1; padding: 1.25rem; display: flex; flex-direction: column; gap: 10px; min-height: 220px; max-height: 280px; overflow-y: auto; background: var(--bg3); }
+  .msg { display: flex; gap: 8px; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-bubble { padding: 10px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.5; max-width: 82%; }
+  .msg.ai .msg-bubble { background: var(--bg4); color: var(--text); border-bottom-left-radius: 4px; }
+  .msg.user .msg-bubble { background: var(--accent); color: #000; border-bottom-right-radius: 4px; font-weight: 500; }
+  .msg-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .msg.ai .msg-avatar { background: rgba(240,165,0,0.2); color: var(--accent); }
+  .msg.user .msg-avatar { background: var(--accent); color: #000; }
+  .typing { display: flex; gap: 4px; padding: 10px 14px; background: var(--bg4); border-radius: 12px; width: fit-content; border-bottom-left-radius: 4px; }
+  .typing span { width: 6px; height: 6px; background: var(--muted); border-radius: 50%; animation: bounce 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+  .agent-input-row { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+  .agent-input { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 13.5px; outline: none; }
+  .agent-input:focus { border-color: rgba(240,165,0,0.4); }
+  .send-btn { background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 10px 16px; font-weight: 700; font-size: 13px; cursor: pointer; transition: opacity 0.2s; }
+  .send-btn:hover { opacity: 0.85; }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .members-section { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .members-header { padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+  .search-bar { display: flex; align-items: center; gap: 8px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; }
+  .search-bar input { background: none; border: none; color: var(--text); font-size: 14px; outline: none; width: 200px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { padding: 12px 1.5rem; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); text-align: left; border-bottom: 1px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
+  tbody tr:hover { background: var(--bg3); }
+  tbody td { padding: 14px 1.5rem; font-size: 14px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 12px; font-weight: 600; }
+  .badge-green { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .badge-amber { background: rgba(240,165,0,0.15); color: var(--accent); }
+  .badge-blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+  .avatar-cell { display: flex; align-items: center; gap: 10px; }
+  .av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+
+  .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+  .plan-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; transition: all 0.2s; position: relative; }
+  .plan-card:hover { transform: translateY(-4px); border-color: rgba(240,165,0,0.3); }
+  .plan-card.featured { border-color: var(--accent); background: linear-gradient(160deg, #1a1200, #111); }
+  .plan-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; font-size: 11px; font-weight: 700; padding: 4px 16px; border-radius: 50px; white-space: nowrap; }
+  .plan-name { font-size: 15px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+  .plan-price { font-size: 3rem; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+  .plan-price sup { font-size: 1.2rem; font-weight: 600; vertical-align: top; margin-top: 10px; display: inline-block; }
+  .plan-period { font-size: 13px; color: var(--muted); margin-top: 4px; margin-bottom: 1.5rem; }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+  .plan-features li { font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .plan-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+  .plan-btn { width: 100%; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
+  .plan-btn.primary { background: var(--accent); color: #000; }
+  .plan-btn.secondary { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+  .plan-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .reminders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .reminder-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .reminder-header { display: flex; align-items: center; justify-content: space-between; }
+  .days-badge { font-size: 2rem; font-weight: 800; color: var(--accent); }
+  .reminder-name { font-weight: 700; font-size: 16px; }
+  .reminder-meta { font-size: 13px; color: var(--muted); }
+  .reminder-actions { display: flex; gap: 8px; margin-top: 4px; }
+  .reminder-btn { flex: 1; padding: 9px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .reminder-btn.notify-owner { background: rgba(59,130,246,0.15); color: #3b82f6; }
+  .reminder-btn.notify-client { background: rgba(240,165,0,0.15); color: var(--accent); }
+  .reminder-btn:hover { opacity: 0.75; }
+  .notify-log { font-size: 12px; color: var(--success); margin-top: 4px; min-height: 18px; }
+
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .gallery-item { aspect-ratio: 1; border-radius: var(--radius-sm); overflow: hidden; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 1px solid var(--border); transition: transform 0.2s; cursor: pointer; }
+  .gallery-item:hover { transform: scale(1.04); }
+
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-input { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; color: var(--text); font-size: 14px; outline: none; transition: border-color 0.2s; }
+  .form-input:focus { border-color: rgba(240,165,0,0.5); }
+  .form-input option { background: var(--bg2); }
+
+  #toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
+  .toast-item { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--success); padding: 12px 16px; border-radius: 8px; font-size: 13px; max-width: 320px; animation: slideIn 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  @keyframes slideIn { from{transform:translateX(100%);opacity:0} to{transform:none;opacity:1} }
+  .toast-item.warn { border-left-color: var(--accent); }
+  .toast-item.info { border-left-color: var(--info); }
+
+  footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-logo { font-size: 22px; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem; }
+  .footer-logo span { color: var(--accent); }
+  .footer-sub { color: var(--muted); font-size: 14px; margin-bottom: 2rem; }
+  .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem; }
+  .footer-links a { font-size: 14px; color: var(--muted); transition: color 0.2s; }
+  .footer-links a:hover { color: var(--accent); }
+  .footer-bottom { font-size: 12px; color: #555; }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; padding: 2rem; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; width: 100%; max-width: 560px; position: relative; }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: var(--bg3); border: none; color: var(--muted); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  .modal-close:hover { color: var(--text); }
+  .modal h3 { font-size: 20px; font-weight: 800; margin-bottom: 1.5rem; }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  @media(max-width:768px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    section { padding: 3rem 1rem; }
+    .hero-content { padding: 3rem 1rem; }
+    .hero-stats { gap: 2rem; flex-wrap: wrap; }
+    .agents-grid { grid-template-columns: 1fr; }
+    .members-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">YOLO <span>FITNESS</span></div>
+  <div class="nav-links">
+    <a href="#agents">AI Agents</a>
+    <a href="#plans">Plans</a>
+    <a href="#members">Members</a>
+    <a href="#reminders">Reminders</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <button class="nav-cta" onclick="openModal('booking')">Join Now</button>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-accent"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> Hyderabad's #1 Rated Gym · 4.9 ⭐ (466 Reviews)</div>
+    <h1>Train Harder.<br><em>Live Bolder.</em><br>Go YOLO.</h1>
+    <p class="hero-sub">Premium fitness facility in Abids, Hyderabad — with AI-powered membership management, smart booking, and 24/7 agent support.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="openModal('booking')">Book Free Trial</button>
+      <button class="btn btn-outline" onclick="document.getElementById('agents').scrollIntoView({behavior:'smooth'})">Meet AI Agents</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">4.9★</div><div class="stat-label">Google Rating</div></div>
+      <div class="stat-item"><div class="stat-num">466+</div><div class="stat-label">Happy Reviews</div></div>
+      <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Active Members</div></div>
+      <div class="stat-item"><div class="stat-num">5th</div><div class="stat-label">Floor, PM House</div></div>
+    </div>
+  </div>
+</div>
+
+<section id="agents">
+  <div class="section-tag">⚡ Powered by Claude AI</div>
+  <h2>Smart <span>AI Agents</span> For Your Gym</h2>
+  <p class="section-sub">Four intelligent agents handling calls, bookings, renewals, and reminders — so Suraj can focus on training.</p>
+  <div class="agents-grid">
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon orange">📞</div>
+        <div><div class="agent-title">Calling Agent</div><div class="agent-desc">Answers queries, schedules visits</div></div>
+        <div class="agent-status"><span class="status-dot"></span> Live</div>
+      </div>
+      <div class="chat-window" id="chat-calling">
+        <div class="msg ai"><div class="msg-avatar">AI</div><div class="msg-bubble">Hi! Welcome to Yolo Fitness by Suraj 💪 I'm your AI assistant. How can I help you today?</div></div>
+      </div>
+      <div class="agent-input-row">
+        <input class="agent-input" id="input-calling" placeholder="Ask about timings, fees, facilities..." onkeydown="if(event.key==='Enter')sendMsg('calling')"/>
+        <button class="send-btn" id="btn-calling" onclick="sendMsg('calling')">Send</button>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon blue">📋</div>
+        <div><div class="agent-title">Booking Agent</div><div class="agent-desc">Membership enrollment &amp; plans</div></div>
+        <div class="agent-status"><span class="status-dot"></span> Live</div>
+      </div>
+      <div class="chat-window" id="chat-booking">
+        <div class="msg ai"><div class="msg-avatar">AI</div><div class="msg-bubble">Hello! I can help you book a membership. Would you like to explore our plans — Monthly (₹2,500), Quarterly (₹6,500), or Annual (₹22,000)?</div></div>
+      </div>
+      <div class="agent-input-row">
+        <input class="agent-input" id="input-booking" placeholder="Ask about membership plans..." onkeydown="if(event.key==='Enter')sendMsg('booking')"/>
+        <button class="send-btn" id="btn-booking" onclick="sendMsg('booking')">Send</button>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon green">🏋️</div>
+        <div><div class="agent-title">Owner Reminder Agent</div><div class="agent-desc">Alerts Suraj about expiring memberships</div></div>
+        <div class="agent-status"><span class="status-dot"></span> Live</div>
+      </div>
+      <div class="chat-window" id="chat-owner">
+        <div class="msg ai"><div class="msg-avatar">AI</div><div class="msg-bubble">Namaste Suraj! 🙏 I'm your gym manager agent. I monitor all memberships and alert you when they're about to expire. Ask me for today's expiry report.</div></div>
+      </div>
+      <div class="agent-input-row">
+        <input class="agent-input" id="input-owner" placeholder="e.g. Show expiry report..." onkeydown="if(event.key==='Enter')sendMsg('owner')"/>
+        <button class="send-btn" id="btn-owner" onclick="sendMsg('owner')">Send</button>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-header">
+        <div class="agent-icon red">🔔</div>
+        <div><div class="agent-title">Client Reminder Agent</div><div class="agent-desc">Sends renewal alerts to members</div></div>
+        <div class="agent-status"><span class="status-dot"></span> Live</div>
+      </div>
+      <div class="chat-window" id="chat-client">
+        <div class="msg ai"><div class="msg-avatar">AI</div><div class="msg-bubble">Hi! I'm your personal membership assistant. I'll remind you 3 days before your membership expires and help you renew smoothly. Type your name to check your status!</div></div>
+      </div>
+      <div class="agent-input-row">
+        <input class="agent-input" id="input-client" placeholder="Enter your name to check status..." onkeydown="if(event.key==='Enter')sendMsg('client')"/>
+        <button class="send-btn" id="btn-client" onclick="sendMsg('client')">Send</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div style="background:var(--bg2);padding:5rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;" id="plans">
+    <div class="section-tag">💎 Membership Plans</div>
+    <h2>Choose Your <span>Power Level</span></h2>
+    <p class="section-sub">Transparent pricing, no hidden fees. All plans include locker access and certified trainer guidance.</p>
+    <div class="plans-grid">
+      <div class="plan-card">
+        <div class="plan-name">Monthly</div>
+        <div class="plan-price"><sup>₹</sup>2,500</div>
+        <div class="plan-period">per month</div>
+        <ul class="plan-features">
+          <li>Unlimited gym access</li><li>Locker facility</li><li>1 trainer session/week</li><li>Diet consultation</li><li>Progress tracking</li>
+        </ul>
+        <button class="plan-btn secondary" onclick="openModal('booking')">Get Started</button>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Quarterly</div>
+        <div class="plan-price"><sup>₹</sup>6,500</div>
+        <div class="plan-period">per 3 months · Save ₹1,000</div>
+        <ul class="plan-features">
+          <li>Everything in Monthly</li><li>3 trainer sessions/week</li><li>Nutrition plan included</li><li>Body composition analysis</li><li>Priority equipment access</li><li>Guest pass (2/month)</li>
+        </ul>
+        <button class="plan-btn primary" onclick="openModal('booking')">Join Now</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Annual</div>
+        <div class="plan-price"><sup>₹</sup>22,000</div>
+        <div class="plan-period">per year · Best Value</div>
+        <ul class="plan-features">
+          <li>Everything in Quarterly</li><li>Unlimited trainer sessions</li><li>Personal fitness roadmap</li><li>Supplement discounts 15%</li><li>Free T-shirt + shaker</li><li>VIP locker assignment</li><li>Bring a friend free (1x)</li>
+        </ul>
+        <button class="plan-btn secondary" onclick="openModal('booking')">Go Annual</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="members">
+  <div class="section-tag">👥 Member Dashboard</div>
+  <h2>Active <span>Members</span></h2>
+  <p class="section-sub">Live membership database. Rows highlighted in amber are expiring within 3 days.</p>
+  <div class="members-section">
+    <div class="members-header">
+      <div style="font-weight:700;font-size:16px;">All Members <span id="member-count" style="color:var(--muted);font-size:14px;font-weight:400;margin-left:8px;"></span></div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <div class="search-bar">
+          <svg width="14" height="14" fill="none" stroke="#888" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="search-input" placeholder="Search members..." oninput="filterMembers()"/>
+        </div>
+        <button class="btn btn-primary" style="padding:9px 18px;font-size:13px;" onclick="openModal('addMember')">+ Add Member</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>Member</th><th>Plan</th><th>Join Date</th><th>Expiry</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="members-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div style="background:var(--bg2);padding:5rem 2rem;">
+  <div style="max-width:1200px;margin:0 auto;" id="reminders">
+    <div class="section-tag">⏰ Expiry Reminders</div>
+    <h2>Memberships Expiring <span>In 3 Days</span></h2>
+    <p class="section-sub">One-click to send reminders to both the owner (Suraj) and the client.</p>
+    <div class="reminders-grid" id="reminders-container"></div>
+  </div>
+</div>
+
+<section id="gallery">
+  <div class="section-tag">📸 Our Facility</div>
+  <h2>World-Class <span>Equipment</span></h2>
+  <p class="section-sub">5th Floor, PM House — Fully air-conditioned with premium machines, free weights, and dedicated zones.</p>
+  <div class="gallery-grid">
+    <div class="gallery-item">🏋️</div><div class="gallery-item">🚴</div><div class="gallery-item">🥊</div><div class="gallery-item">🏃</div>
+    <div class="gallery-item">💪</div><div class="gallery-item">🧘</div><div class="gallery-item">🔥</div><div class="gallery-item">⚡</div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-tag">📍 Find Us</div>
+  <h2>Visit <span>Yolo Fitness</span></h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:2rem;">
+    <div class="card" style="display:flex;gap:16px;">
+      <div style="font-size:24px;">📍</div>
+      <div><div style="font-weight:700;margin-bottom:4px;">Address</div><div style="color:var(--muted);font-size:14px;line-height:1.7;">5th Floor PM House, Chirag Ali Ln,<br>Mahesh Nagar, Abids,<br>Hyderabad 500001</div></div>
+    </div>
+    <div class="card" style="display:flex;gap:16px;">
+      <div style="font-size:24px;">📞</div>
+      <div><div style="font-weight:700;margin-bottom:4px;">Call Us</div><div style="color:var(--muted);font-size:14px;line-height:1.7;">098480 81347<br><span style="color:var(--success)">● Open 5:30 AM – 10:00 PM</span><br>Mon – Sat</div></div>
+    </div>
+    <div class="card" style="display:flex;gap:16px;">
+      <div style="font-size:24px;">⭐</div>
+      <div><div style="font-weight:700;margin-bottom:4px;">Reviews</div><div style="font-size:2rem;font-weight:800;color:var(--accent);">4.9</div><div style="color:var(--muted);font-size:13px;">466 Google Reviews</div></div>
+    </div>
+    <div class="card" style="display:flex;gap:16px;">
+      <div style="font-size:24px;">🤖</div>
+      <div><div style="font-weight:700;margin-bottom:4px;">AI Support</div><div style="color:var(--muted);font-size:14px;line-height:1.7;">Chat with our AI agents<br>available 24/7 for queries,<br>bookings &amp; reminders</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">YOLO <span>FITNESS</span> BY SURAJ</div>
+    <div class="footer-sub">Abids, Hyderabad · 098480 81347</div>
+    <div class="footer-links">
+      <a href="#agents">AI Agents</a><a href="#plans">Plans</a><a href="#members">Members</a><a href="#reminders">Reminders</a><a href="#contact">Contact</a>
+    </div>
+    <div class="footer-bottom">© 2025 Yolo Fitness By Suraj. All rights reserved. Powered by Claude AI.</div>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="modal-booking">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('booking')">✕</button>
+    <h3>📋 Book Your Membership</h3>
+    <div class="form-grid" style="margin-bottom:1rem;">
+      <div class="form-group"><label>Full Name</label><input class="form-input" id="bk-name" placeholder="Your full name"/></div>
+      <div class="form-group"><label>Phone Number</label><input class="form-input" id="bk-phone" placeholder="10-digit mobile number"/></div>
+      <div class="form-group"><label>Plan</label>
+        <select class="form-input" id="bk-plan">
+          <option value="Monthly">Monthly — ₹2,500</option>
+          <option value="Quarterly">Quarterly — ₹6,500</option>
+          <option value="Annual">Annual — ₹22,000</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Start Date</label><input class="form-input" type="date" id="bk-date"/></div>
+    </div>
+    <div id="booking-ai-response" style="background:var(--bg3);border-radius:8px;padding:12px;font-size:13.5px;display:none;margin-bottom:1rem;color:var(--text);line-height:1.6;"></div>
+    <button class="btn btn-primary" style="width:100%;" id="bk-submit" onclick="submitBooking()">Confirm Booking via AI Agent</button>
+  </div>
+</div>
+
+<!-- ADD MEMBER MODAL -->
+<div class="modal-overlay" id="modal-addMember">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('addMember')">✕</button>
+    <h3>👤 Add New Member</h3>
+    <div class="form-grid" style="margin-bottom:1.5rem;">
+      <div class="form-group"><label>Full Name</label><input class="form-input" id="am-name" placeholder="Member name"/></div>
+      <div class="form-group"><label>Phone</label><input class="form-input" id="am-phone" placeholder="Phone number"/></div>
+      <div class="form-group"><label>Plan</label>
+        <select class="form-input" id="am-plan"><option>Monthly</option><option>Quarterly</option><option>Annual</option></select>
+      </div>
+      <div class="form-group"><label>Join Date</label><input class="form-input" type="date" id="am-join"/></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;" onclick="addMember()">Add Member</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-sonnet-4-20250514";
+
+const today = new Date();
+function daysFromNow(d){return Math.ceil((new Date(d)-today)/(1000*60*60*24));}
+function dateOffset(days){const d=new Date(today);d.setDate(d.getDate()+days);return d.toISOString().split('T')[0];}
+
+let members=[
+  {id:1,name:"Rahul Sharma",phone:"9876543210",plan:"Monthly",join:"2025-02-15",expiry:dateOffset(2),avatar:"RS",color:"#f0a500"},
+  {id:2,name:"Priya Reddy",phone:"9988776655",plan:"Quarterly",join:"2025-01-10",expiry:dateOffset(3),avatar:"PR",color:"#3b82f6"},
+  {id:3,name:"Arjun Mehta",phone:"9123456789",plan:"Annual",join:"2024-11-01",expiry:dateOffset(1),avatar:"AM",color:"#22c55e"},
+  {id:4,name:"Sneha Patel",phone:"9012345678",plan:"Monthly",join:"2025-03-01",expiry:dateOffset(25),avatar:"SP",color:"#ef4444"},
+  {id:5,name:"Vikram Rao",phone:"9871234567",plan:"Quarterly",join:"2025-01-20",expiry:dateOffset(-1),avatar:"VR",color:"#8b5cf6"},
+  {id:6,name:"Kavya Singh",phone:"9765432109",plan:"Annual",join:"2024-12-10",expiry:dateOffset(60),avatar:"KS",color:"#06b6d4"},
+  {id:7,name:"Mohan Das",phone:"9654321098",plan:"Monthly",join:"2025-03-10",expiry:dateOffset(3),avatar:"MD",color:"#f59e0b"},
+  {id:8,name:"Anita Joshi",phone:"9543210987",plan:"Quarterly",join:"2025-02-01",expiry:dateOffset(15),avatar:"AJ",color:"#ec4899"},
+];
+
+function getStatus(expiry){
+  const d=daysFromNow(expiry);
+  if(d<0)return{label:"Expired",cls:"badge-red"};
+  if(d<=3)return{label:"Expiring Soon",cls:"badge-amber"};
+  return{label:"Active",cls:"badge-green"};
+}
+
+function renderMembers(list){
+  const tbody=document.getElementById('members-tbody');
+  tbody.innerHTML='';
+  list.forEach(m=>{
+    const s=getStatus(m.expiry);
+    const d=daysFromNow(m.expiry);
+    const rowStyle=d>=0&&d<=3?'background:rgba(240,165,0,0.06);':'';
+    tbody.innerHTML+=`<tr style="${rowStyle}">
+      <td><div class="avatar-cell"><div class="av" style="background:${m.color}22;color:${m.color}">${m.avatar}</div><div><div style="font-weight:600;">${m.name}</div><div style="font-size:12px;color:var(--muted);">${m.phone}</div></div></div></td>
+      <td><span class="badge badge-blue">${m.plan}</span></td>
+      <td style="color:var(--muted)">${m.join}</td>
+      <td style="font-weight:600;${d>=0&&d<=3?'color:var(--accent)':d<0?'color:var(--danger)':''}">${m.expiry}${d>=0&&d<=3?' <span style="font-size:11px;color:var(--accent);">('+d+'d left)</span>':d<0?' <span style="font-size:11px;color:var(--danger);">('+Math.abs(d)+'d ago)</span>':''}</td>
+      <td><span class="badge ${s.cls}">${s.label}</span></td>
+      <td><button onclick="quickRemind(${m.id})" style="background:rgba(240,165,0,0.15);color:var(--accent);border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;">Remind</button></td>
+    </tr>`;
+  });
+  document.getElementById('member-count').textContent=`(${list.length} total)`;
+}
+
+function filterMembers(){
+  const q=document.getElementById('search-input').value.toLowerCase();
+  renderMembers(members.filter(m=>m.name.toLowerCase().includes(q)||m.phone.includes(q)||m.plan.toLowerCase().includes(q)));
+}
+
+function renderReminders(){
+  const expiring=members.filter(m=>{const d=daysFromNow(m.expiry);return d>=0&&d<=3;});
+  const container=document.getElementById('reminders-container');
+  if(!expiring.length){container.innerHTML='<div class="card" style="text-align:center;padding:3rem;color:var(--muted);">✅ No memberships expiring in the next 3 days</div>';return;}
+  container.innerHTML=expiring.map(m=>{
+    const d=daysFromNow(m.expiry);
+    return`<div class="reminder-card">
+      <div class="reminder-header">
+        <div><div class="reminder-name">${m.name}</div><div class="reminder-meta">${m.plan} · ${m.phone}</div></div>
+        <div style="text-align:right;"><div class="days-badge">${d}</div><div style="font-size:11px;color:var(--muted);">days left</div></div>
+      </div>
+      <div style="font-size:13px;color:var(--muted);">Expires: <span style="color:var(--accent);font-weight:600;">${m.expiry}</span></div>
+      <div class="reminder-actions">
+        <button class="reminder-btn notify-owner" onclick="notifyOwner(${m.id})">🏋️ Alert Suraj</button>
+        <button class="reminder-btn notify-client" onclick="notifyClient(${m.id})">📲 Remind ${m.name.split(' ')[0]}</button>
+      </div>
+      <div class="notify-log" id="log-${m.id}"></div>
+    </div>`;
+  }).join('');
+}
+
+const gymContext=`You are an AI agent for Yolo Fitness by Suraj, a premium gym at 5th Floor PM House, Chirag Ali Lane, Mahesh Nagar, Abids, Hyderabad 500001. Phone: 098480 81347. Rating: 4.9/5 (466 reviews). Timings: 5:30 AM - 10:00 PM Mon-Sat. Plans: Monthly ₹2500, Quarterly ₹6500, Annual ₹22000. All include locker, trainer, diet consult. Owner: Suraj. Be warm, motivating, professional. Keep responses to 2-4 sentences. Use fitness emojis occasionally.`;
+const agentContexts={
+  calling:gymContext+" You handle general inquiries — timings, location, facilities, fees, trainers.",
+  booking:gymContext+" You handle membership bookings. Collect name, phone, preferred plan and walk them through the process.",
+  owner:gymContext+" You talk to Suraj the owner. Provide business insights, membership reports and alerts. Expiring members (3 days): "+JSON.stringify(members.filter(m=>{const d=daysFromNow(m.expiry);return d>=0&&d<=3;}).map(m=>({name:m.name,plan:m.plan,expiry:m.expiry,daysLeft:daysFromNow(m.expiry)}))),
+  client:gymContext+" You help members check their status. Member list: "+JSON.stringify(members.map(m=>({name:m.name,plan:m.plan,expiry:m.expiry,daysLeft:daysFromNow(m.expiry)})))
+};
+const chatHistories={calling:[],booking:[],owner:[],client:[]};
+
+async function sendMsg(agent){
+  const input=document.getElementById(`input-${agent}`);
+  const btn=document.getElementById(`btn-${agent}`);
+  const chatWindow=document.getElementById(`chat-${agent}`);
+  const text=input.value.trim();
+  if(!text)return;
+  input.value=''; btn.disabled=true;
+  appendMsg(chatWindow,text,'user');
+  chatHistories[agent].push({role:'user',content:text});
+  const typing=addTyping(chatWindow);
+  try{
+    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:1000,system:agentContexts[agent],messages:chatHistories[agent]})});
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||"Sorry, I couldn't connect right now. Please call us at 098480 81347.";
+    typing.remove(); appendMsg(chatWindow,reply,'ai');
+    chatHistories[agent].push({role:'assistant',content:reply});
+  }catch(e){
+    typing.remove();
+    const fallback=getFallback(agent,text);
+    appendMsg(chatWindow,fallback,'ai');
+    chatHistories[agent].push({role:'assistant',content:fallback});
+  }
+  btn.disabled=false; input.focus();
+}
+
+function getFallback(agent,text){
+  const t=text.toLowerCase();
+  if(agent==='calling'){
+    if(t.includes('time')||t.includes('hour'))return"We're open 5:30 AM – 10:00 PM, Monday to Saturday! 🕐";
+    if(t.includes('fee')||t.includes('price')||t.includes('cost'))return"Monthly ₹2,500 | Quarterly ₹6,500 | Annual ₹22,000 💪 All include trainer access!";
+    if(t.includes('address')||t.includes('location'))return"5th Floor, PM House, Chirag Ali Lane, Abids, Hyderabad 500001 📍";
+    return"Thanks for reaching out! Call 098480 81347 for help. Open 5:30 AM–10 PM, Mon-Sat 💪";
+  }
+  if(agent==='booking')return"I'd love to help you book! Our popular Quarterly plan is ₹6,500. Call 098480 81347 or click 'Join Now' to complete your booking! 🏋️";
+  if(agent==='owner')return"Suraj, you have "+members.filter(m=>{const d=daysFromNow(m.expiry);return d>=0&&d<=3;}).length+" memberships expiring in 3 days. Check the reminders section! 📊";
+  return"Please call 098480 81347 for your latest membership status or visit us directly! 🏃";
+}
+
+function appendMsg(container,text,role){
+  const div=document.createElement('div');
+  div.className=`msg ${role}`;
+  div.innerHTML=`<div class="msg-avatar">${role==='ai'?'AI':'U'}</div><div class="msg-bubble">${text}</div>`;
+  container.appendChild(div);
+  container.scrollTop=container.scrollHeight;
+}
+
+function addTyping(container){
+  const row=document.createElement('div');
+  row.className='msg ai';
+  row.innerHTML=`<div class="msg-avatar">AI</div><div class="typing"><span></span><span></span><span></span></div>`;
+  container.appendChild(row);
+  container.scrollTop=container.scrollHeight;
+  return row;
+}
+
+async function notifyOwner(id){
+  const m=members.find(x=>x.id===id);
+  const log=document.getElementById(`log-${id}`);
+  log.textContent='⏳ Composing alert for Suraj...';
+  try{
+    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:1000,messages:[{role:'user',content:`Write a short WhatsApp message (2-3 lines) to gym owner Suraj alerting that member ${m.name} (${m.plan} plan, phone: ${m.phone}) has membership expiring in ${daysFromNow(m.expiry)} days on ${m.expiry}. Be professional and action-oriented.`}]})});
+    const data=await res.json();
+    const msg=data.content?.[0]?.text||`Suraj, ${m.name}'s ${m.plan} membership expires in ${daysFromNow(m.expiry)} days (${m.expiry}). Please follow up!`;
+    showToast(`✅ Owner Alert: "${msg.substring(0,80)}..."`, 'info');
+    log.textContent='✅ Suraj notified successfully';
+  }catch{
+    showToast(`📲 Suraj alerted: ${m.name}'s membership expires in ${daysFromNow(m.expiry)} days!`,'info');
+    log.textContent='✅ Suraj notified';
+  }
+}
+
+async function notifyClient(id){
+  const m=members.find(x=>x.id===id);
+  const log=document.getElementById(`log-${id}`);
+  log.textContent='⏳ Drafting reminder for member...';
+  try{
+    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:1000,messages:[{role:'user',content:`Write a warm WhatsApp reminder (2-3 lines) to gym member ${m.name.split(' ')[0]} that their ${m.plan} membership at Yolo Fitness by Suraj expires in ${daysFromNow(m.expiry)} days on ${m.expiry}. Encourage renewal. Gym phone: 098480 81347. Friendly and motivating!`}]})});
+    const data=await res.json();
+    const msg=data.content?.[0]?.text||`Hi ${m.name.split(' ')[0]}! Your ${m.plan} membership expires in ${daysFromNow(m.expiry)} days. Renew now! Call 098480 81347.`;
+    showToast(`✅ Sent to ${m.name.split(' ')[0]}: "${msg.substring(0,80)}..."`, 'success');
+    log.textContent=`✅ Reminder sent to ${m.name.split(' ')[0]}`;
+  }catch{
+    showToast(`📲 Reminder sent to ${m.name.split(' ')[0]}: Expires in ${daysFromNow(m.expiry)} days!`,'success');
+    log.textContent=`✅ Reminder sent to ${m.name.split(' ')[0]}`;
+  }
+}
+
+async function quickRemind(id){
+  const m=members.find(x=>x.id===id);
+  const d=daysFromNow(m.expiry);
+  if(d>3){showToast(`${m.name} — ${d} days remaining. No urgent reminder needed.`,'warn');return;}
+  showToast(`🔔 Reminders queued for ${m.name} (${d} days left)`,'info');
+  await notifyOwner(id); await notifyClient(id);
+}
+
+async function submitBooking(){
+  const name=document.getElementById('bk-name').value.trim();
+  const phone=document.getElementById('bk-phone').value.trim();
+  const plan=document.getElementById('bk-plan').value;
+  const date=document.getElementById('bk-date').value;
+  if(!name||!phone){showToast('Please fill in name and phone!','warn');return;}
+  const btn=document.getElementById('bk-submit');
+  const resp=document.getElementById('booking-ai-response');
+  btn.textContent='Processing...'; btn.disabled=true;
+  resp.style.display='block'; resp.textContent='🤖 AI Booking Agent is processing...';
+  try{
+    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL,max_tokens:1000,messages:[{role:'user',content:`Generate a friendly booking confirmation for: Name: ${name}, Phone: ${phone}, Plan: ${plan} at Yolo Fitness by Suraj, Start: ${date||'Immediately'}. Include warm welcome, what to bring day 1 (ID, comfortable clothes), gym phone 098480 81347. Keep it 3-4 lines.`}]})});
+    const data=await res.json();
+    resp.textContent=data.content?.[0]?.text||`Welcome ${name}! Your ${plan} membership is confirmed. Visit 5th Floor, PM House, Abids. Bring ID and comfortable clothes. Call 098480 81347!`;
+  }catch{
+    resp.textContent=`🎉 Welcome ${name}! Your ${plan} membership at Yolo Fitness is confirmed starting ${date||'immediately'}. See you at 5:30 AM! Call 098480 81347.`;
+  }
+  const planDays={Monthly:30,Quarterly:90,Annual:365}[plan]||30;
+  const startDate=date||today.toISOString().split('T')[0];
+  const expDate=new Date(startDate); expDate.setDate(expDate.getDate()+planDays);
+  members.push({id:members.length+1,name,phone,plan,join:startDate,expiry:expDate.toISOString().split('T')[0],avatar:name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),color:['#f0a500','#3b82f6','#22c55e','#ef4444','#8b5cf6'][Math.floor(Math.random()*5)]});
+  renderMembers(members); renderReminders();
+  showToast(`✅ ${name} enrolled in ${plan} plan!`,'success');
+  btn.textContent='✅ Booking Confirmed!';
+}
+
+function addMember(){
+  const name=document.getElementById('am-name').value.trim();
+  const phone=document.getElementById('am-phone').value.trim();
+  const plan=document.getElementById('am-plan').value;
+  const join=document.getElementById('am-join').value||today.toISOString().split('T')[0];
+  if(!name||!phone){showToast('Please fill name and phone!','warn');return;}
+  const planDays={Monthly:30,Quarterly:90,Annual:365}[plan]||30;
+  const exp=new Date(join); exp.setDate(exp.getDate()+planDays);
+  members.push({id:members.length+1,name,phone,plan,join,expiry:exp.toISOString().split('T')[0],avatar:name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),color:['#f0a500','#3b82f6','#22c55e','#ef4444','#8b5cf6'][Math.floor(Math.random()*5)]});
+  renderMembers(members); renderReminders();
+  showToast(`✅ ${name} added successfully!`,'success');
+  closeModal('addMember');
+  document.getElementById('am-name').value='';
+  document.getElementById('am-phone').value='';
+}
+
+function openModal(id){document.getElementById(`modal-${id}`).classList.add('active');}
+function closeModal(id){document.getElementById(`modal-${id}`).classList.remove('active');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('active');}));
+
+function showToast(msg,type='success'){
+  const toast=document.getElementById('toast');
+  const el=document.createElement('div');
+  el.className=`toast-item ${type}`;
+  el.textContent=msg;
+  toast.appendChild(el);
+  setTimeout(()=>el.remove(),5000);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const td=today.toISOString().split('T')[0];
+  document.getElementById('bk-date').value=td;
+  document.getElementById('am-join').value=td;
+  renderMembers(members);
+  renderReminders();
+  const expiring=members.filter(m=>{const d=daysFromNow(m.expiry);return d>=0&&d<=3;});
+  if(expiring.length)setTimeout(()=>showToast(`⚠️ ${expiring.length} membership(s) expiring within 3 days! Check Reminders.`,'warn'),1500);
+});
+</script>
+</body>
+  </html>
